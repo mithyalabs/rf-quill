@@ -82,7 +82,7 @@ var QUILL_MODULES = {
     ],
 };
 
-reactForms.attachField('rating', React.createElement(RichTextEditor, null));
+reactForms.attachField('rte-quill', React.createElement(RichTextEditor, null));
 
 exports.QUILL_FORMATS = QUILL_FORMATS;
 exports.QUILL_MODULES = QUILL_MODULES;

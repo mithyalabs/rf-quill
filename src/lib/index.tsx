@@ -3,4 +3,4 @@ import { attachField } from 'react-forms';
 import RichTextEditor from './RFReactQuill';
 export * from './RFReactQuill'
 
-attachField('rating', <RichTextEditor />);
+attachField('rte-quill', <RichTextEditor />);

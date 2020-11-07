@@ -76,7 +76,7 @@ var QUILL_MODULES = {
     ],
 };
 
-attachField('rating', React.createElement(RichTextEditor, null));
+attachField('rte-quill', React.createElement(RichTextEditor, null));
 
 export { QUILL_FORMATS, QUILL_MODULES };
 //# sourceMappingURL=index.es.js.map
