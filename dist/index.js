@@ -43,30 +43,33 @@ var RichTextEditor = function (props) {
     var quillRef = React.useRef(null);
     var fieldConfig = props.fieldConfig, formikProps = props.formikProps, _a = props.fieldProps, fieldProps = _a === void 0 ? {} : _a;
     var value = _.get(formikProps, "values." + fieldProps.name) || '';
-    // const showColorPicker = (value: any) => {
-    //     const quill = quillRef.current?.getEditor();
-    //     if (value === 'color-picker') {
-    //         var picker = document.getElementById('color-picker') as HTMLInputElement;
-    //         if (!picker) {
-    //             picker = document.createElement('input');
-    //             picker.id = 'color-picker';
-    //             picker.type = 'color';
-    //             picker.style.display = 'none';
-    //             picker.value = '#FF0000';
-    //             document.body.appendChild(picker);
-    //             picker.addEventListener('change', function () {
-    //                 quill?.format('color', picker.value);
-    //             }, false);
-    //         }
-    //         picker.click();
-    //     } else {
-    //         quill?.format('color', value);
-    //     }
-    // }
+    var showColorPicker = function (value) {
+        var _a;
+        var quill = (_a = quillRef.current) === null || _a === void 0 ? void 0 : _a.getEditor();
+        if (value === 'color-picker') {
+            var picker = document.getElementById('color-picker');
+            if (!picker) {
+                picker = document.createElement('input');
+                picker.id = 'color-picker';
+                picker.type = 'color';
+                picker.style.display = 'none';
+                picker.value = '#FF0000';
+                document.body.appendChild(picker);
+                picker.addEventListener('change', function () {
+                    quill === null || quill === void 0 ? void 0 : quill.format('color', picker.value);
+                }, false);
+            }
+            picker.click();
+        }
+        else {
+            quill === null || quill === void 0 ? void 0 : quill.format('color', value);
+        }
+    };
     React.useEffect(function () {
-        // const quill = quillRef.current?.getEditor();
-        // var toolbar = quill?.getModule('toolbar');
-        // toolbar.addHandler('color', showColorPicker);
+        var _a;
+        var quill = (_a = quillRef.current) === null || _a === void 0 ? void 0 : _a.getEditor();
+        var toolbar = quill === null || quill === void 0 ? void 0 : quill.getModule('toolbar');
+        toolbar.addHandler('color', showColorPicker);
     }, []);
     return (React__default.createElement(ReactQuill, __assign({ ref: function (ref) { quillRef.current = ref; }, formats: QUILL_FORMATS, modules: QUILL_MODULES, className: classes.rte, value: value, onChange: function (data) { return formikProps === null || formikProps === void 0 ? void 0 : formikProps.setFieldValue((fieldConfig === null || fieldConfig === void 0 ? void 0 : fieldConfig.valueKey) || '', data); } }, fieldProps)));
 };
@@ -75,6 +78,17 @@ var useStyles = styles.makeStyles(function () {
         rte: {
             '& .ql-editor': {
                 minHeight: 160
+            },
+            '& .ql-color .ql-picker-options [data-value=color-picker]:before': {
+                content: 'Pick Color',
+            },
+            '& .ql-color .ql-picker-options [data-value=color-picker]': {
+                background: 'none !important',
+                width: '100% !important',
+                height: '25px !important',
+                textAlign: 'center',
+                color: 'blue',
+                textDecoration: 'underline',
             }
         },
     }));
