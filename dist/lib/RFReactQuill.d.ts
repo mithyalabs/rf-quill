@@ -26,8 +26,8 @@ export declare const QUILL_MODULES: {
     }[] | {
         indent: string;
     }[] | {
-        align: never[];
+        color: never[];
     }[] | {
-        color: string[];
+        align: never[];
     }[])[];
 };
