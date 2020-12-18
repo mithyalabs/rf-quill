@@ -73,10 +73,10 @@ const useStyles = makeStyles<Theme>(() => {
             '& .ql-editor': {
                 minHeight: 160
             },
-            ' & .ql-color .ql-picker-options [data-value=color-picker]:before': {
+            '& .ql-color .ql-picker-options [data-value=color-picker]:before': {
                 content: 'Pick Color',
             },
-            ' & .ql-color .ql-picker-options [data-value=color-picker]': {
+            '& .ql-color .ql-picker-options [data-value=color-picker]': {
                 background: 'none !important',
                 width: '100% !important',
                 height: '25px !important',
