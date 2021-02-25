@@ -7,6 +7,7 @@ function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'defau
 var React = require('react');
 var React__default = _interopDefault(React);
 var reactForms = require('react-forms');
+var core = require('@material-ui/core');
 var styles = require('@material-ui/core/styles');
 var _ = _interopDefault(require('lodash'));
 var ReactQuill = _interopDefault(require('react-quill'));
@@ -41,8 +42,11 @@ var __assign = function() {
 var RichTextEditor = function (props) {
     var classes = useStyles();
     var quillRef = React.useRef(null);
-    var fieldConfig = props.fieldConfig, formikProps = props.formikProps, _a = props.fieldProps, fieldProps = _a === void 0 ? {} : _a;
-    var value = _.get(formikProps, "values." + fieldProps.name) || '';
+    var fieldConfig = props.fieldConfig, _a = props.formikProps, formikProps = _a === void 0 ? {} : _a, _b = props.fieldProps, fieldProps = _b === void 0 ? {} : _b;
+    var label = fieldProps.label, labelProps = fieldProps.labelProps, helperText = fieldProps.helperText, helperTextProps = fieldProps.helperTextProps;
+    var name = fieldProps.name;
+    var value = _.get(formikProps, "values." + name) || '';
+    var errorText = reactForms.getFieldError(name, formikProps);
     var showColorPicker = function (value) {
         var _a;
         var quill = (_a = quillRef.current) === null || _a === void 0 ? void 0 : _a.getEditor();
@@ -71,7 +75,16 @@ var RichTextEditor = function (props) {
         var toolbar = quill === null || quill === void 0 ? void 0 : quill.getModule('toolbar');
         toolbar.addHandler('color', showColorPicker);
     }, []);
-    return (React__default.createElement(ReactQuill, __assign({ ref: function (ref) { quillRef.current = ref; }, formats: QUILL_FORMATS, modules: QUILL_MODULES, className: classes.rte, value: value, onChange: function (data) { return formikProps === null || formikProps === void 0 ? void 0 : formikProps.setFieldValue((fieldConfig === null || fieldConfig === void 0 ? void 0 : fieldConfig.valueKey) || '', data); } }, fieldProps)));
+    return (React__default.createElement(React__default.Fragment, null,
+        React__default.createElement(core.InputLabel, __assign({}, labelProps, { error: !!errorText }),
+            " ",
+            label,
+            " "),
+        React__default.createElement(ReactQuill, __assign({ ref: function (ref) { quillRef.current = ref; }, formats: QUILL_FORMATS, modules: QUILL_MODULES, className: classes.rte, value: value, onChange: function (data) { return formikProps === null || formikProps === void 0 ? void 0 : formikProps.setFieldValue((fieldConfig === null || fieldConfig === void 0 ? void 0 : fieldConfig.valueKey) || '', data); } }, fieldProps)),
+        React__default.createElement(core.FormHelperText, __assign({}, helperTextProps, { error: !!errorText }),
+            " ",
+            errorText || helperText,
+            " ")));
 };
 var useStyles = styles.makeStyles(function () {
     return (styles.createStyles({

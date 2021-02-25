@@ -1,12 +1,17 @@
+import { FormHelperTextProps, InputLabelProps } from '@material-ui/core';
 import { FC } from 'react';
 import { IFieldProps } from 'react-forms';
 import "react-quill/dist/quill.snow.css";
-export interface ReactQuillProps {
+export interface ReactQuillFieldProps {
     name: string;
     format?: QuillFormat[];
+    label: string;
+    labelProps: InputLabelProps;
+    helperText: string;
+    helperTextProps: FormHelperTextProps;
 }
 export interface RichTextEditorProps extends IFieldProps {
-    fieldProps?: ReactQuillProps;
+    fieldProps?: ReactQuillFieldProps;
 }
 declare const RichTextEditor: FC<RichTextEditorProps>;
 export default RichTextEditor;

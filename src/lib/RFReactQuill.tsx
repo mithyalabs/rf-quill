@@ -1,19 +1,25 @@
+import { FormHelperText, FormHelperTextProps, InputLabel, InputLabelProps } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { FormikProps } from 'formik';
 import _ from 'lodash';
 import React, { FC, useEffect, useRef } from 'react';
-import { IFieldProps } from 'react-forms';
+import { getFieldError, IFieldProps } from 'react-forms';
 import ReactQuill from 'react-quill';
 import "react-quill/dist/quill.snow.css";
 
 
 
-export interface ReactQuillProps {
+export interface ReactQuillFieldProps {
     name: string,
-    format?: QuillFormat[]
+    format?: QuillFormat[];
+    label: string;
+    labelProps: InputLabelProps;
+    helperText: string;
+    helperTextProps: FormHelperTextProps;
 }
 
 export interface RichTextEditorProps extends IFieldProps {
-    fieldProps?: ReactQuillProps;
+    fieldProps?: ReactQuillFieldProps;
 }
 
 const RichTextEditor: FC<RichTextEditorProps> = (props) => {
@@ -21,9 +27,11 @@ const RichTextEditor: FC<RichTextEditorProps> = (props) => {
 
     const quillRef = useRef<ReactQuill | null>(null);
 
-    const { fieldConfig, formikProps, fieldProps = {} as ReactQuillProps } = props;
-
-    const value = _.get(formikProps, `values.${fieldProps.name}`) || '';
+    const { fieldConfig, formikProps = {} as FormikProps<any>, fieldProps = {} as ReactQuillFieldProps } = props;
+    const { label, labelProps, helperText, helperTextProps } = fieldProps;
+    const { name } = fieldProps;
+    const value = _.get(formikProps, `values.${name}`) || '';
+    const errorText = getFieldError(name, formikProps);
 
     const showColorPicker = (value: any) => {
         const quill = quillRef.current?.getEditor();
@@ -45,7 +53,7 @@ const RichTextEditor: FC<RichTextEditorProps> = (props) => {
         } else {
             quill?.format('color', value);
         }
-    }
+    };
 
     useEffect(() => {
         const quill = quillRef.current?.getEditor();
@@ -53,18 +61,24 @@ const RichTextEditor: FC<RichTextEditorProps> = (props) => {
         toolbar.addHandler('color', showColorPicker);
     }, []);
 
+
+
     return (
-        <ReactQuill
-            ref={ref => { quillRef.current = ref }}
-            formats={QUILL_FORMATS}
-            modules={QUILL_MODULES}
-            className={classes.rte}
-            value={value}
-            onChange={data => formikProps?.setFieldValue(fieldConfig?.valueKey || '', data)}
-            {...fieldProps}
-        />
-    )
-}
+        <>
+            <InputLabel {...labelProps} error={!!errorText} > {label} </InputLabel>
+            <ReactQuill
+                ref={ref => { quillRef.current = ref; }}
+                formats={QUILL_FORMATS}
+                modules={QUILL_MODULES}
+                className={classes.rte}
+                value={value}
+                onChange={data => formikProps?.setFieldValue(fieldConfig?.valueKey || '', data)}
+                {...fieldProps}
+            />
+            <FormHelperText {...helperTextProps} error={!!errorText}> {errorText || helperText} </FormHelperText>
+        </>
+    );
+};
 
 
 const useStyles = makeStyles<Theme>(() => {
@@ -85,10 +99,10 @@ const useStyles = makeStyles<Theme>(() => {
                 textDecoration: 'underline',
             }
         },
-    }))
-})
+    }));
+});
 
-export default RichTextEditor
+export default RichTextEditor;
 
 export type QuillFormat =
     'header' |
@@ -98,7 +112,7 @@ export type QuillFormat =
     'link' | 'image' | 'color' | 'script' | 'font' | 'align' |
     'direction' |
     'size' | 'list' |
-    'blockquote' | 'code-block'
+    'blockquote' | 'code-block';
 
 export const QUILL_FORMATS: QuillFormat[] = [
     'header',
@@ -109,7 +123,7 @@ export const QUILL_FORMATS: QuillFormat[] = [
     'direction',
     'size', 'list',
     'blockquote', 'code-block'
-]
+];
 
 export const QUILL_MODULES = {
     history: {
@@ -130,4 +144,4 @@ export const QUILL_MODULES = {
         [{ 'color': ["#000000", "#e60000", "#ff9900", "#ffff00", "#008a00", "#0066cc", "#9933ff", "#ffffff", "#facccc", "#ffebcc", "#ffffcc", "#cce8cc", "#cce0f5", "#ebd6ff", "#bbbbbb", "#f06666", "#ffc266", "#ffff66", "#66b966", "#66a3e0", "#c285ff", "#888888", "#a10000", "#b26b00", "#b2b200", "#006100", "#0047b2", "#6b24b2", "#444444", "#5c0000", "#663d00", "#666600", "#003700", "#002966", "#3d1466", 'color-picker'] }]
     ],
 
-}
+};
