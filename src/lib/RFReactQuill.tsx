@@ -35,7 +35,7 @@ const RichTextEditor: FC<RichTextEditorProps> = (props) => {
 	}, []);
 
 	const quillRef = useRef<ReactQuill | null>(null);
-
+	
 	const { fieldConfig, formikProps = {} as FormikProps<any>, fieldProps = {} as ReactQuillFieldProps } = props;
 	const { label, labelProps, helperText, helperTextProps } = fieldProps;
 	const { name } = fieldProps;
@@ -82,7 +82,7 @@ const RichTextEditor: FC<RichTextEditorProps> = (props) => {
 				modules={getQuillModule(name)}
 				className={classes.rte}
 				value={value}
-				onChange={data => formikProps?.setFieldValue(fieldConfig?.name || '', data)}
+				onChange={data => formikProps?.setFieldValue(fieldConfig?.valueKey || '', data)}
 				{...fieldProps}
 			/>
 			<FormHelperText {...helperTextProps} error={!!errorText}> {errorText || helperText} </FormHelperText>
