@@ -8,7 +8,7 @@ import ReactQuill, { Quill } from 'react-quill';
 import "react-quill/dist/quill.snow.css";
 import QuillToolbar, { getQuillModule } from './QuillToolbar';
 
-
+export interface QuillFontSizeOption { label: string; value: string; }
 
 export interface ReactQuillFieldProps {
 	name: string,
@@ -17,6 +17,7 @@ export interface ReactQuillFieldProps {
 	labelProps: InputLabelProps;
 	helperText: string;
 	helperTextProps: FormHelperTextProps;
+	sizes?: QuillFontSizeOption[];
 }
 
 export interface RichTextEditorProps extends IFieldProps {
@@ -24,20 +25,21 @@ export interface RichTextEditorProps extends IFieldProps {
 }
 
 const RichTextEditor: FC<RichTextEditorProps> = (props) => {
+	const { fieldConfig, formikProps = {} as FormikProps<any>, fieldProps = {} as ReactQuillFieldProps } = props;
+	const { label, labelProps, helperText, helperTextProps, sizes } = fieldProps;
+
 	const classes = useStyles();
 	useEffect(() => {
 		const Size = Quill.import('attributors/style/size');
 		const Align = Quill.import('attributors/style/align');
-		Size.whitelist = ['12px', '14px', '16px', '18px', '20px'];
-		console.log({ Size, Align });
+		Size.whitelist = sizes?.map((size) => (size.value)) || ['11px', '12px', '14px', '16px', '18px', '20px', '24px', '34px'];
+
 		Quill.register(Size, true);
 		Quill.register(Align, true);
-	}, []);
+	}, [sizes]);
 
 	const quillRef = useRef<ReactQuill | null>(null);
-	
-	const { fieldConfig, formikProps = {} as FormikProps<any>, fieldProps = {} as ReactQuillFieldProps } = props;
-	const { label, labelProps, helperText, helperTextProps } = fieldProps;
+
 	const { name } = fieldProps;
 	const value = _.get(formikProps, `values.${name}`) || '';
 	const errorText = getFieldError(name, formikProps);
@@ -70,12 +72,11 @@ const RichTextEditor: FC<RichTextEditorProps> = (props) => {
 		toolbar.addHandler('color', showColorPicker);
 	}, []);
 
-	console.log({ name });
 
 	return (
 		<>
 			<InputLabel {...labelProps} error={!!errorText} > {label} </InputLabel>
-			<QuillToolbar variant="size" id={name} />
+			<QuillToolbar customSizes={sizes} id={name} />
 			<ReactQuill
 				ref={ref => { quillRef.current = ref; }}
 				formats={QUILL_FORMATS}

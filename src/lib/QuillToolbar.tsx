@@ -1,22 +1,22 @@
 import React from 'react';
-import { QUILL_MODULES } from './RFReactQuill';
+import { QuillFontSizeOption, QUILL_MODULES } from './RFReactQuill';
 
 
 type ToolbarOption = 'size' | 'color' | 'image' | 'align';
 interface QuillToolbarProps {
 	id: string;
-	variant?: 'headings' | 'size';
+	// variant?: 'headings' | 'size';
 	toolbarOptions?: ToolbarOption[];
+	customSizes?: QuillFontSizeOption[];
 }
 
 const QuillToolbar: React.FC<QuillToolbarProps> = (props) => {
-	const { variant = 'headings', toolbarOptions = ['align', 'color', 'image', 'size'] } = props;
+	const { toolbarOptions = ['align', 'color', 'image', 'size'], customSizes } = props;
 
-
-	return (
+	return (<>
 		<div id={props.id}>
 			{toolbarOptions.includes('size') &&
-				variant === 'headings' ? Heading : Size
+				customSizes ? getCustomSizeOptions(customSizes) : Size
 			}
 			<span className="ql-formats">
 				{Formatting}
@@ -26,6 +26,7 @@ const QuillToolbar: React.FC<QuillToolbarProps> = (props) => {
 			{toolbarOptions.includes('align') && Align}
 			{Indents}
 		</div>
+	</>
 	);
 };
 
@@ -42,29 +43,34 @@ const Color = (
 	<input id="color" type="color" className="ql-color" />
 );
 
+const getCustomSizeOptions = (customSizes: QuillFontSizeOption[]) => {
+	return <select className="ql-size">{customSizes.map((size, index) => <option style={{ fontSize: size.value }} key={size.value} selected={index === 0} value={size.value}>{size.label} ({size.value})</option>)}</select>;
+};
 
-const Heading = (
-	<span className="ql-formats">
-		<select className="ql-header">
-			<option value="1">Heading 1</option>
-			<option value="2">Heading 2</option>
-			<option value="3">Heading 3</option>
-			{/* <option value="4">Heading 4</option>
-            <option value="5">Heading 5</option>
-            <option value="6">Heading 6</option> */}
-			<option selected value="">Normal</option>
-		</select>
-	</span>
-);
+// const Heading = (
+// 	<span className="ql-formats">
+// 		<select className="ql-header">
+// 			<option value="1">Heading 1</option>
+// 			<option value="2">Heading 2</option>
+// 			<option value="3">Heading 3</option>
+// 			{/* <option value="4">Heading 4</option>
+//             <option value="5">Heading 5</option>
+//             <option value="6">Heading 6</option> */}
+// 			<option selected value="">Normal</option>
+// 		</select>
+// 	</span>
+// );
 
 const Size = (
 	<select className="ql-size">
-		<option value="12px">Small</option>
-		<option selected value="14px">Medium</option>
-		<option value="18px">Large</option>
+		<option value="34px" >Heading 1 (34px) </option>
+		<option value="24px" >Heading 2 (24px) </option>
+		<option value="20px" >Heading 3 (20px) </option>
+		<option value="16px" selected>Body 1 (16px) </option>
+		<option value="14px" >Body 2 (14px) </option>
+		<option value="11px" >Body 3 (11px) </option>
 	</select>
 );
-
 const Indents = (
 	<span className="ql-formats">
 		<button className="ql-list" value="ordered"></button>

@@ -2,6 +2,10 @@ import { FormHelperTextProps, InputLabelProps } from '@material-ui/core';
 import { FC } from 'react';
 import { IFieldProps } from 'react-forms';
 import "react-quill/dist/quill.snow.css";
+export interface QuillFontSizeOption {
+    label: string;
+    value: string;
+}
 export interface ReactQuillFieldProps {
     name: string;
     format?: QuillFormat[];
@@ -9,6 +13,7 @@ export interface ReactQuillFieldProps {
     labelProps: InputLabelProps;
     helperText: string;
     helperTextProps: FormHelperTextProps;
+    sizes?: QuillFontSizeOption[];
 }
 export interface RichTextEditorProps extends IFieldProps {
     fieldProps?: ReactQuillFieldProps;
