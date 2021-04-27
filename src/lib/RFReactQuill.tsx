@@ -18,6 +18,7 @@ export interface ReactQuillFieldProps {
 	helperText: string;
 	helperTextProps: FormHelperTextProps;
 	sizes?: QuillFontSizeOption[];
+	customImageUploadAdapter?: (file: any) => Promise<string>;
 }
 
 export interface RichTextEditorProps extends IFieldProps {
@@ -66,10 +67,47 @@ const RichTextEditor: FC<RichTextEditorProps> = (props) => {
 		}
 	};
 
+	function imageHandler() {
+		const input = document.createElement('input');
+		input.setAttribute('type', 'file');
+		input.click();
+
+		// Listen upload local image and save to server
+		input.onchange = () => {
+			const file = input?.files?.[0];
+			let reader = new FileReader();
+			if (file) {
+				reader.onload = () => {
+					let fileInfo = {
+						name: file.name,
+						type: file.type,
+						size: Math.round(file.size / 1000) + ' kB',
+						base64: reader.result,
+						file: file,
+					};
+					saveToServer(fileInfo);
+				};
+				reader['readAsDataURL'](file);
+			}
+		};
+	}
+
+	const saveToServer =  async <T extends {}>(file?: T) => {
+        if (fieldProps.customImageUploadAdapter) {
+            const url = await fieldProps.customImageUploadAdapter(file);
+		    const quill = quillRef.current?.getEditor();
+		    const range = quill?.getSelection();
+		    if (range) quill?.insertEmbed(range.index, 'image', url);
+        }
+	}
+
+
 	useEffect(() => {
 		const quill = quillRef.current?.getEditor();
 		var toolbar = quill?.getModule('toolbar');
 		toolbar.addHandler('color', showColorPicker);
+		if(fieldProps.customImageUploadAdapter)
+		    toolbar.addHandler('image', imageHandler);
 	}, []);
 
 
