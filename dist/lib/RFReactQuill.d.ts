@@ -14,6 +14,7 @@ export interface ReactQuillFieldProps {
     helperText: string;
     helperTextProps: FormHelperTextProps;
     sizes?: QuillFontSizeOption[];
+    customImageUploadAdapter?: (file: any) => Promise<string>;
 }
 export interface RichTextEditorProps extends IFieldProps {
     fieldProps?: ReactQuillFieldProps;
