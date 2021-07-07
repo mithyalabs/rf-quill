@@ -70,30 +70,31 @@ function __generator(thisArg, body) {
 }
 
 var QuillToolbar = function (props) {
-    var _a = props.toolbarOptions, toolbarOptions = _a === void 0 ? ['align', 'color', 'image', 'size'] : _a, customSizes = props.customSizes;
+    var _a = props.toolbarOptions, toolbarOptions = _a === void 0 ? ["align", "color", "image", "size"] : _a, customSizes = props.customSizes;
     return (React.createElement(React.Fragment, null,
         React.createElement("div", { id: props.id },
-            toolbarOptions.includes('size') &&
-                customSizes ? getCustomSizeOptions(customSizes) : Size,
+            toolbarOptions.includes("size") && customSizes
+                ? getCustomSizeOptions(customSizes)
+                : Size,
             React.createElement("span", { className: "ql-formats" },
                 Formatting,
-                toolbarOptions.includes('color') && Color),
-            toolbarOptions.includes('image') && Image,
-            toolbarOptions.includes('align') && Align,
+                toolbarOptions.includes("color") && Color),
+            toolbarOptions.includes("image") && Image,
+            toolbarOptions.includes("align") && Align,
             Indents)));
 };
-var Image = (React.createElement("button", { className: "ql-image" }));
+var Image = React.createElement("button", { className: "ql-image" });
 // const Color = (
 //     <select className="ql-color">
 //     </select>
 // )
-var Color = (React.createElement("input", { id: "color", type: "color", className: "ql-color" }));
+var Color = React.createElement("input", { id: "color", type: "color", className: "ql-color" });
 var getCustomSizeOptions = function (customSizes) {
-    return React.createElement("select", { className: "ql-size" }, customSizes.map(function (size, index) { return React.createElement("option", { style: { fontSize: size.value }, key: size.value, selected: index === 0, value: size.value },
+    return (React.createElement("select", { className: "ql-size" }, customSizes.map(function (size, index) { return (React.createElement("option", { style: { fontSize: size.value }, key: size.value, selected: index === 0, value: size.value },
         size.label,
         " (",
         size.value,
-        ")"); }));
+        ")")); })));
 };
 // const Heading = (
 // 	<span className="ql-formats">
@@ -108,11 +109,11 @@ var getCustomSizeOptions = function (customSizes) {
 // 		</select>
 // 	</span>
 // );
-var Size = (React.createElement("select", { className: "ql-size" },
+var Size = (React.createElement("select", { className: "ql-size", defaultValue: "16px" },
     React.createElement("option", { value: "34px" }, "Heading 1 (34px) "),
     React.createElement("option", { value: "24px" }, "Heading 2 (24px) "),
     React.createElement("option", { value: "20px" }, "Heading 3 (20px) "),
-    React.createElement("option", { value: "16px", selected: true }, "Body 1 (16px) "),
+    React.createElement("option", { value: "16px" }, "Body 1 (16px) "),
     React.createElement("option", { value: "14px" }, "Body 2 (14px) "),
     React.createElement("option", { value: "11px" }, "Body 3 (11px) ")));
 var Indents = (React.createElement("span", { className: "ql-formats" },

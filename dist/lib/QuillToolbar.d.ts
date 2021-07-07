@@ -1,6 +1,6 @@
-import React from 'react';
-import { QuillFontSizeOption } from './RFReactQuill';
-declare type ToolbarOption = 'size' | 'color' | 'image' | 'align';
+import React from "react";
+import { QuillFontSizeOption } from "./RFReactQuill";
+declare type ToolbarOption = "size" | "color" | "image" | "align";
 interface QuillToolbarProps {
     id: string;
     toolbarOptions?: ToolbarOption[];
