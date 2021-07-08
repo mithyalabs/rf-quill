@@ -92,33 +92,33 @@ const RichTextEditor: FC<RichTextEditorProps> = (props) => {
 		};
 	}
 
-	const saveToServer =  async <T extends {}>(file?: T) => {
-        if (fieldProps.customImageUploadAdapter) {
-            const url = await fieldProps.customImageUploadAdapter(file);
-		    const quill = quillRef.current?.getEditor();
-		    const range = quill?.getSelection();
-		    if (range) quill?.insertEmbed(range.index, 'image', url);
-        }
-	}
+	const saveToServer = async <T extends {}>(file?: T) => {
+		if (fieldProps.customImageUploadAdapter) {
+			const url = await fieldProps.customImageUploadAdapter(file);
+			const quill = quillRef.current?.getEditor();
+			const range = quill?.getSelection();
+			if (range) quill?.insertEmbed(range.index, 'image', url);
+		}
+	};
 
 
 	useEffect(() => {
 		const quill = quillRef.current?.getEditor();
 		var toolbar = quill?.getModule('toolbar');
 		toolbar.addHandler('color', showColorPicker);
-		if(fieldProps.customImageUploadAdapter)
-		    toolbar.addHandler('image', imageHandler);
+		if (fieldProps.customImageUploadAdapter)
+			toolbar.addHandler('image', imageHandler);
 	}, []);
 
-
+	const toolbarId = name.replace(/[^\w]/gi, ''); // If toolbarId has any special characters, then the ReactQuill editor won't be able to find it and the page will fail to load.
 	return (
 		<>
 			<InputLabel {...labelProps} error={!!errorText} > {label} </InputLabel>
-			<QuillToolbar customSizes={sizes} id={name} />
+			<QuillToolbar customSizes={sizes} id={toolbarId} />
 			<ReactQuill
 				ref={ref => { quillRef.current = ref; }}
 				formats={QUILL_FORMATS}
-				modules={getQuillModule(name)}
+				modules={getQuillModule(toolbarId)}
 				className={classes.rte}
 				value={value}
 				onChange={data => formikProps?.setFieldValue(fieldConfig?.valueKey || '', processText(data))}
