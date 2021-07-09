@@ -221,13 +221,14 @@ var RichTextEditor = function (props) {
         if (fieldProps.customImageUploadAdapter)
             toolbar.addHandler('image', imageHandler);
     }, []);
+    var toolbarId = name.replace(/[^\w]/gi, ''); // If toolbarId has any special characters, then the ReactQuill editor won't be able to find it and the page will fail to load.
     return (React.createElement(React.Fragment, null,
         React.createElement(InputLabel, __assign({}, labelProps, { error: !!errorText }),
             " ",
             label,
             " "),
-        React.createElement(QuillToolbar, { customSizes: sizes, id: name }),
-        React.createElement(ReactQuill, __assign({ ref: function (ref) { quillRef.current = ref; }, formats: QUILL_FORMATS, modules: getQuillModule(name), className: classes.rte, value: value, onChange: function (data) { return formikProps === null || formikProps === void 0 ? void 0 : formikProps.setFieldValue((fieldConfig === null || fieldConfig === void 0 ? void 0 : fieldConfig.valueKey) || '', processText(data)); } }, fieldProps)),
+        React.createElement(QuillToolbar, { customSizes: sizes, id: toolbarId }),
+        React.createElement(ReactQuill, __assign({ ref: function (ref) { quillRef.current = ref; }, formats: QUILL_FORMATS, modules: getQuillModule(toolbarId), className: classes.rte, value: value, onChange: function (data) { return formikProps === null || formikProps === void 0 ? void 0 : formikProps.setFieldValue((fieldConfig === null || fieldConfig === void 0 ? void 0 : fieldConfig.valueKey) || '', processText(data)); } }, fieldProps)),
         React.createElement(FormHelperText, __assign({}, helperTextProps, { error: !!errorText }),
             " ",
             errorText || helperText,
