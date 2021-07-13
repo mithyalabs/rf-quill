@@ -229,7 +229,11 @@ var RichTextEditor = function (props) {
         if (fieldProps.customImageUploadAdapter)
             toolbar.addHandler('image', imageHandler);
     }, []);
-    var toolbarId = name.replace(/[^\w]/gi, ''); // If toolbarId has any special characters, then the ReactQuill editor won't be able to find it and the page will fail to load.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    var toolbarId = React__default.useMemo(function () { return ({ toolbarId: (name + Math.random().toString(36)).replace(/[^\w]/gi, '') }); }, []).toolbarId;
+    // If toolbarId has any special characters, then the ReactQuill editor won't be able to find it and the page will fail to load.
+    // Also pad an alphanumeric random string of 1-12 characters that make sure that toolbarId is unique for about 70M entries
+    // Modified version of method found in https://stackoverflow.com/a/12502559/10032950
     return (React__default.createElement(React__default.Fragment, null,
         React__default.createElement(core.InputLabel, __assign({}, labelProps, { error: !!errorText }),
             " ",
