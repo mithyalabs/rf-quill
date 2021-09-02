@@ -77,6 +77,8 @@ function __generator(thisArg, body) {
     }
 }
 
+var DEFAULT_FONT_SIZE = "16px";
+
 var QuillToolbar = function (props) {
     var _a = props.toolbarOptions, toolbarOptions = _a === void 0 ? ["align", "color", "image", "size"] : _a, customSizes = props.customSizes;
     return (React__default.createElement(React__default.Fragment, null,
@@ -117,7 +119,7 @@ var getCustomSizeOptions = function (customSizes) {
 // 		</select>
 // 	</span>
 // );
-var Size = (React__default.createElement("select", { className: "ql-size", defaultValue: "16px" },
+var Size = (React__default.createElement("select", { className: "ql-size", value: "" + DEFAULT_FONT_SIZE },
     React__default.createElement("option", { value: "34px" }, "Heading 1 (34px) "),
     React__default.createElement("option", { value: "24px" }, "Heading 2 (24px) "),
     React__default.createElement("option", { value: "20px" }, "Heading 3 (20px) "),
@@ -228,12 +230,13 @@ var RichTextEditor = function (props) {
         toolbar.addHandler('color', showColorPicker);
         if (fieldProps.customImageUploadAdapter)
             toolbar.addHandler('image', imageHandler);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     var toolbarId = React__default.useMemo(function () { return ({ toolbarId: (name + Math.random().toString(36)).replace(/[^\w]/gi, '') }); }, []).toolbarId;
     // If toolbarId has any special characters, then the ReactQuill editor won't be able to find it and the page will fail to load.
-    // Also pad an alphanumeric random string of 1-12 characters that make sure that toolbarId is unique for about 70M entries
-    // Modified version of method found in https://stackoverflow.com/a/12502559/10032950
+    // Also pad an alphanumeric random string of 0-11 characters that make sure that toolbarId is unique for about 70M entries
+    // https://stackoverflow.com/a/12502559/10032950
     return (React__default.createElement(React__default.Fragment, null,
         React__default.createElement(core.InputLabel, __assign({}, labelProps, { error: !!errorText }),
             " ",
@@ -250,7 +253,8 @@ var useStyles = styles.makeStyles(function () {
     return (styles.createStyles({
         rte: {
             '& .ql-editor': {
-                minHeight: 160
+                minHeight: 160,
+                fontSize: DEFAULT_FONT_SIZE,
             },
             '& .ql-color .ql-picker-options [data-value=color-picker]:before': {
                 content: 'Pick Color',
@@ -262,7 +266,7 @@ var useStyles = styles.makeStyles(function () {
                 textAlign: 'center',
                 color: 'blue',
                 textDecoration: 'underline',
-            }
+            },
         },
     }));
 });
