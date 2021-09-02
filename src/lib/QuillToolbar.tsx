@@ -1,4 +1,5 @@
 import React from "react";
+import { DEFAULT_FONT_SIZE } from "./Constants";
 import { QuillFontSizeOption, QUILL_MODULES } from "./RFReactQuill";
 
 type ToolbarOption = "size" | "color" | "image" | "align";
@@ -72,7 +73,7 @@ const getCustomSizeOptions = (customSizes: QuillFontSizeOption[]) => {
 // );
 
 const Size = (
-  <select className="ql-size" defaultValue="16px">
+  <select className="ql-size" value={`${DEFAULT_FONT_SIZE}`}>
     <option value="34px">Heading 1 (34px) </option>
     <option value="24px">Heading 2 (24px) </option>
     <option value="20px">Heading 3 (20px) </option>

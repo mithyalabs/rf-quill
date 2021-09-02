@@ -7,6 +7,7 @@ import { getFieldError, IFieldProps } from 'react-forms';
 import ReactQuill, { Quill } from 'react-quill';
 import "react-quill/dist/quill.snow.css";
 import QuillToolbar, { getQuillModule } from './QuillToolbar';
+import { DEFAULT_FONT_SIZE } from "./Constants";
 
 export interface QuillFontSizeOption { label: string; value: string; }
 
@@ -108,13 +109,14 @@ const RichTextEditor: FC<RichTextEditorProps> = (props) => {
 		toolbar.addHandler('color', showColorPicker);
 		if (fieldProps.customImageUploadAdapter)
 			toolbar.addHandler('image', imageHandler);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	let { toolbarId } = React.useMemo(() => ({ toolbarId: (name + Math.random().toString(36)).replace(/[^\w]/gi, '') }), []);
+	let {toolbarId} = React.useMemo(()=>({ toolbarId: (name+Math.random().toString(36)).replace(/[^\w]/gi, '') }), []); 
 	// If toolbarId has any special characters, then the ReactQuill editor won't be able to find it and the page will fail to load.
-	// Also pad an alphanumeric random string of 1-12 characters that make sure that toolbarId is unique for about 70M entries
-	// Modified version of method found in https://stackoverflow.com/a/12502559/10032950
+	// Also pad an alphanumeric random string of 0-11 characters that make sure that toolbarId is unique for about 70M entries
+	// https://stackoverflow.com/a/12502559/10032950
 
 	return (
 		<>
@@ -139,7 +141,8 @@ const useStyles = makeStyles<Theme>(() => {
 	return (createStyles({
 		rte: {
 			'& .ql-editor': {
-				minHeight: 160
+				minHeight: 160,
+				fontSize: DEFAULT_FONT_SIZE, // documentation: https://github.com/quilljs/quill/issues/1493 (.ql-editor works better than using .ql-container as suggested in the comments)
 			},
 			'& .ql-color .ql-picker-options [data-value=color-picker]:before': {
 				content: 'Pick Color',
@@ -151,7 +154,7 @@ const useStyles = makeStyles<Theme>(() => {
 				textAlign: 'center',
 				color: 'blue',
 				textDecoration: 'underline',
-			}
+			},
 		},
 	}));
 });
