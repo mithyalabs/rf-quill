@@ -72,14 +72,18 @@ function __generator(thisArg, body) {
 var DEFAULT_FONT_SIZE = "16px";
 
 var QuillToolbar = function (props) {
-    var _a = props.toolbarOptions, toolbarOptions = _a === void 0 ? ["align", "color", "image", "size"] : _a, customSizes = props.customSizes;
+    var _a = props.toolbarOptions, toolbarOptions = _a === void 0 ? ["align", "color", "image", "size"] : _a, customSizes = props.customSizes, formats = props.formats;
     return (React.createElement(React.Fragment, null,
         React.createElement("div", { id: props.id },
             toolbarOptions.includes("size") && customSizes
                 ? getCustomSizeOptions(customSizes)
                 : Size,
             React.createElement("span", { className: "ql-formats" },
-                Formatting,
+                formats
+                    ? formats.map(function (format) {
+                        return (React.createElement("button", { key: format, className: "ql-" + format }));
+                    })
+                    : Formatting,
                 toolbarOptions.includes("color") && Color),
             toolbarOptions.includes("image") && Image,
             toolbarOptions.includes("align") && Align,
@@ -98,19 +102,12 @@ var getCustomSizeOptions = function (customSizes) {
         size.value,
         ")")); })));
 };
-// const Heading = (
-// 	<span className="ql-formats">
-// 		<select className="ql-header">
-// 			<option value="1">Heading 1</option>
-// 			<option value="2">Heading 2</option>
-// 			<option value="3">Heading 3</option>
-// 			{/* <option value="4">Heading 4</option>
-//             <option value="5">Heading 5</option>
-//             <option value="6">Heading 6</option> */}
-// 			<option selected value="">Normal</option>
-// 		</select>
-// 	</span>
-// );
+var defaultFormats = [
+    "bold",
+    "italic",
+    "underline",
+    "link",
+];
 var Size = (React.createElement("select", { className: "ql-size", value: "" + DEFAULT_FONT_SIZE },
     React.createElement("option", { value: "34px" }, "Heading 1 (34px) "),
     React.createElement("option", { value: "24px" }, "Heading 2 (24px) "),
@@ -123,11 +120,7 @@ var Indents = (React.createElement("span", { className: "ql-formats" },
     React.createElement("button", { className: "ql-list", value: "bullet" }),
     React.createElement("button", { className: "ql-indent", value: "-1" }),
     React.createElement("button", { className: "ql-indent", value: "+1" })));
-var Formatting = (React.createElement(React.Fragment, null,
-    React.createElement("button", { className: "ql-bold" }),
-    React.createElement("button", { className: "ql-italic" }),
-    React.createElement("button", { className: "ql-underline" }),
-    React.createElement("button", { className: "ql-link" })));
+var Formatting = (React.createElement(React.Fragment, null, defaultFormats.map(function (format) { return (React.createElement("button", { key: format, className: "ql-" + format })); })));
 var Align = (React.createElement("span", { className: "ql-formats" },
     React.createElement("button", { className: "ql-direction", value: "rtl" }),
     React.createElement("select", { className: "ql-align" })));
@@ -137,44 +130,52 @@ var getQuillModule = function (toolbarId) {
 
 var RichTextEditor = function (props) {
     var fieldConfig = props.fieldConfig, _a = props.formikProps, formikProps = _a === void 0 ? {} : _a, _b = props.fieldProps, fieldProps = _b === void 0 ? {} : _b;
-    var label = fieldProps.label, labelProps = fieldProps.labelProps, helperText = fieldProps.helperText, helperTextProps = fieldProps.helperTextProps, sizes = fieldProps.sizes;
+    var label = fieldProps.label, labelProps = fieldProps.labelProps, helperText = fieldProps.helperText, helperTextProps = fieldProps.helperTextProps, sizes = fieldProps.sizes, format = fieldProps.format, name = fieldProps.name;
     var classes = useStyles();
     useEffect(function () {
-        var Size = Quill.import('attributors/style/size');
-        var Align = Quill.import('attributors/style/align');
-        Size.whitelist = (sizes === null || sizes === void 0 ? void 0 : sizes.map(function (size) { return (size.value); })) || ['11px', '12px', '14px', '16px', '18px', '20px', '24px', '34px'];
+        var Size = Quill.import("attributors/style/size");
+        var Align = Quill.import("attributors/style/align");
+        Size.whitelist = (sizes === null || sizes === void 0 ? void 0 : sizes.map(function (size) { return size.value; })) || [
+            "11px",
+            "12px",
+            "14px",
+            "16px",
+            "18px",
+            "20px",
+            "24px",
+            "34px",
+        ];
         Quill.register(Size, true);
         Quill.register(Align, true);
     }, [sizes]);
     var quillRef = useRef(null);
-    var name = fieldProps.name;
-    var value = _.get(formikProps, "values." + name) || '';
+    var value = _.get(formikProps, "values." + name) || "";
     var errorText = getFieldError(name, formikProps);
     var showColorPicker = function (value) {
         var _a;
         var quill = (_a = quillRef.current) === null || _a === void 0 ? void 0 : _a.getEditor();
-        if (value === 'color-picker') {
-            var picker = document.getElementById('color-picker');
+        if (value === "color-picker") {
+            var picker = document.getElementById("color-picker");
             if (!picker) {
-                picker = document.createElement('input');
-                picker.id = 'color-picker';
-                picker.type = 'color';
-                picker.style.display = 'none';
-                picker.value = '#FF0000';
+                picker = document.createElement("input");
+                picker.id = "color-picker";
+                picker.type = "color";
+                picker.style.display = "none";
+                picker.value = "#FF0000";
                 document.body.appendChild(picker);
-                picker.addEventListener('change', function () {
-                    quill === null || quill === void 0 ? void 0 : quill.format('color', picker.value);
+                picker.addEventListener("change", function () {
+                    quill === null || quill === void 0 ? void 0 : quill.format("color", picker.value);
                 }, false);
             }
             picker.click();
         }
         else {
-            quill === null || quill === void 0 ? void 0 : quill.format('color', value);
+            quill === null || quill === void 0 ? void 0 : quill.format("color", value);
         }
     };
     function imageHandler() {
-        var input = document.createElement('input');
-        input.setAttribute('type', 'file');
+        var input = document.createElement("input");
+        input.setAttribute("type", "file");
         input.click();
         // Listen upload local image and save to server
         input.onchange = function () {
@@ -186,13 +187,13 @@ var RichTextEditor = function (props) {
                     var fileInfo = {
                         name: file.name,
                         type: file.type,
-                        size: Math.round(file.size / 1000) + ' kB',
+                        size: Math.round(file.size / 1000) + " kB",
                         base64: reader.result,
                         file: file,
                     };
                     saveToServer(fileInfo);
                 };
-                reader['readAsDataURL'](file);
+                reader["readAsDataURL"](file);
             }
         };
     }
@@ -209,7 +210,7 @@ var RichTextEditor = function (props) {
                     quill = (_a = quillRef.current) === null || _a === void 0 ? void 0 : _a.getEditor();
                     range = quill === null || quill === void 0 ? void 0 : quill.getSelection();
                     if (range)
-                        quill === null || quill === void 0 ? void 0 : quill.insertEmbed(range.index, 'image', url);
+                        quill === null || quill === void 0 ? void 0 : quill.insertEmbed(range.index, "image", url);
                     _b.label = 2;
                 case 2: return [2 /*return*/];
             }
@@ -218,84 +219,116 @@ var RichTextEditor = function (props) {
     useEffect(function () {
         var _a;
         var quill = (_a = quillRef.current) === null || _a === void 0 ? void 0 : _a.getEditor();
-        var toolbar = quill === null || quill === void 0 ? void 0 : quill.getModule('toolbar');
-        toolbar.addHandler('color', showColorPicker);
+        var toolbar = quill === null || quill === void 0 ? void 0 : quill.getModule("toolbar");
+        toolbar.addHandler("color", showColorPicker);
         if (fieldProps.customImageUploadAdapter)
-            toolbar.addHandler('image', imageHandler);
+            toolbar.addHandler("image", imageHandler);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    var toolbarId = React.useMemo(function () { return ({ toolbarId: (name + Math.random().toString(36)).replace(/[^\w]/gi, '') }); }, []).toolbarId;
+    var toolbarId = React.useMemo(function () { return ({
+        toolbarId: (name + Math.random().toString(36)).replace(/[^\w]/gi, ""),
+    }); }, [name]).toolbarId;
     // If toolbarId has any special characters, then the ReactQuill editor won't be able to find it and the page will fail to load.
     // Also pad an alphanumeric random string of 0-11 characters that make sure that toolbarId is unique for about 70M entries
     // https://stackoverflow.com/a/12502559/10032950
     return (React.createElement(React.Fragment, null,
-        React.createElement(InputLabel, __assign({}, labelProps, { error: !!errorText }),
-            " ",
-            label,
-            " "),
-        React.createElement(QuillToolbar, { customSizes: sizes, id: toolbarId }),
-        React.createElement(ReactQuill, __assign({ ref: function (ref) { quillRef.current = ref; }, formats: QUILL_FORMATS, modules: getQuillModule(toolbarId), className: classes.rte, value: value, onChange: function (data) { return formikProps === null || formikProps === void 0 ? void 0 : formikProps.setFieldValue((fieldConfig === null || fieldConfig === void 0 ? void 0 : fieldConfig.valueKey) || '', processText(data)); } }, fieldProps)),
+        React.createElement(InputLabel, __assign({}, labelProps, { error: !!errorText }), label),
+        React.createElement(QuillToolbar, { formats: format, customSizes: sizes, id: toolbarId }),
+        React.createElement(ReactQuill, __assign({ ref: function (ref) {
+                quillRef.current = ref;
+            }, modules: getQuillModule(toolbarId), className: classes.rte, value: value, onChange: function (data) { return formikProps === null || formikProps === void 0 ? void 0 : formikProps.setFieldValue((fieldConfig === null || fieldConfig === void 0 ? void 0 : fieldConfig.valueKey) || "", processText(data)); } }, fieldProps)),
         React.createElement(FormHelperText, __assign({}, helperTextProps, { error: !!errorText }),
-            " ",
             errorText || helperText,
             " ")));
 };
 var useStyles = makeStyles(function () {
-    return (createStyles({
+    return createStyles({
         rte: {
-            '& .ql-editor': {
+            "& .ql-editor": {
                 minHeight: 160,
                 fontSize: DEFAULT_FONT_SIZE,
             },
-            '& .ql-color .ql-picker-options [data-value=color-picker]:before': {
-                content: 'Pick Color',
+            "& .ql-color .ql-picker-options [data-value=color-picker]:before": {
+                content: "Pick Color",
             },
-            '& .ql-color .ql-picker-options [data-value=color-picker]': {
-                background: 'none !important',
-                width: '100% !important',
-                height: '25px !important',
-                textAlign: 'center',
-                color: 'blue',
-                textDecoration: 'underline',
+            "& .ql-color .ql-picker-options [data-value=color-picker]": {
+                background: "none !important",
+                width: "100% !important",
+                height: "25px !important",
+                textAlign: "center",
+                color: "blue",
+                textDecoration: "underline",
             },
         },
-    }));
+    });
 });
-var QUILL_FORMATS = [
-    'header',
-    'image',
-    'bold', 'italic', 'underline', 'strike',
-    'indent',
-    'link', 'image', 'color', 'script', 'font', 'align',
-    'direction',
-    'size', 'list',
-    'blockquote', 'code-block'
-];
 var QUILL_MODULES = {
     history: {
         delay: 100,
         maxStack: 200,
-        userOnly: false
+        userOnly: false,
     },
     clipboard: {
         matchVisual: false,
     },
     toolbar: [
-        [{ size: ['small', 'normal', 'large'] }],
-        ['bold', 'italic', 'underline', 'strike', 'link', 'blockquote'],
-        [{ 'indent': '-1' }, { 'indent': '+1' }],
+        [{ size: ["small", "normal", "large"] }],
+        ["bold", "italic", "underline", "strike", "link", "blockquote"],
+        [{ indent: "-1" }, { indent: "+1" }],
         // [{ 'color': [] }],
-        [{ 'align': [] }],
-        ['image'],
-        [{ 'color': ["#000000", "#e60000", "#ff9900", "#ffff00", "#008a00", "#0066cc", "#9933ff", "#ffffff", "#facccc", "#ffebcc", "#ffffcc", "#cce8cc", "#cce0f5", "#ebd6ff", "#bbbbbb", "#f06666", "#ffc266", "#ffff66", "#66b966", "#66a3e0", "#c285ff", "#888888", "#a10000", "#b26b00", "#b2b200", "#006100", "#0047b2", "#6b24b2", "#444444", "#5c0000", "#663d00", "#666600", "#003700", "#002966", "#3d1466", 'color-picker'] }]
+        [{ align: [] }],
+        ["image"],
+        [
+            {
+                color: [
+                    "#000000",
+                    "#e60000",
+                    "#ff9900",
+                    "#ffff00",
+                    "#008a00",
+                    "#0066cc",
+                    "#9933ff",
+                    "#ffffff",
+                    "#facccc",
+                    "#ffebcc",
+                    "#ffffcc",
+                    "#cce8cc",
+                    "#cce0f5",
+                    "#ebd6ff",
+                    "#bbbbbb",
+                    "#f06666",
+                    "#ffc266",
+                    "#ffff66",
+                    "#66b966",
+                    "#66a3e0",
+                    "#c285ff",
+                    "#888888",
+                    "#a10000",
+                    "#b26b00",
+                    "#b2b200",
+                    "#006100",
+                    "#0047b2",
+                    "#6b24b2",
+                    "#444444",
+                    "#5c0000",
+                    "#663d00",
+                    "#666600",
+                    "#003700",
+                    "#002966",
+                    "#3d1466",
+                    "color-picker",
+                ],
+            },
+        ],
     ],
 };
 var processText = function (text) {
-    return text.replaceAll(/<p><br><\/p>/g, '<p>&nbsp;</p>');
+    // quill simply keeps adding <br> for no reason at all. Workaround for it.
+    return text.replaceAll(/<p><br><\/p>/g, "<p>&nbsp;</p>");
 };
 
 attachField('rte-quill', React.createElement(RichTextEditor, null));
 
-export { QUILL_FORMATS, QUILL_MODULES };
+export { QUILL_MODULES };
 //# sourceMappingURL=index.es.js.map
