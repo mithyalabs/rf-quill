@@ -1,4 +1,5 @@
 import React from "react";
+import { DEFAULT_FONT_SIZE } from "./Constants";
 import { QuillFontSizeOption, QUILL_MODULES } from "./RFReactQuill";
 
 type ToolbarOption = "size" | "color" | "image" | "align";
@@ -7,11 +8,15 @@ interface QuillToolbarProps {
   // variant?: 'headings' | 'size';
   toolbarOptions?: ToolbarOption[];
   customSizes?: QuillFontSizeOption[];
+  formats?: QuillFormat[];
 }
 
 const QuillToolbar: React.FC<QuillToolbarProps> = (props) => {
-  const { toolbarOptions = ["align", "color", "image", "size"], customSizes } =
-    props;
+  const {
+    toolbarOptions = ["align", "color", "image", "size"],
+    customSizes,
+    formats,
+  } = props;
 
   return (
     <>
@@ -20,7 +25,13 @@ const QuillToolbar: React.FC<QuillToolbarProps> = (props) => {
           ? getCustomSizeOptions(customSizes)
           : Size}
         <span className="ql-formats">
-          {Formatting}
+          {formats
+            ? formats.map((format) => {
+                return (
+                  <button key={format} className={`ql-${format}`}></button>
+                );
+              })
+            : Formatting}
           {toolbarOptions.includes("color") && Color}
         </span>
         {toolbarOptions.includes("image") && Image}
@@ -57,22 +68,15 @@ const getCustomSizeOptions = (customSizes: QuillFontSizeOption[]) => {
   );
 };
 
-// const Heading = (
-// 	<span className="ql-formats">
-// 		<select className="ql-header">
-// 			<option value="1">Heading 1</option>
-// 			<option value="2">Heading 2</option>
-// 			<option value="3">Heading 3</option>
-// 			{/* <option value="4">Heading 4</option>
-//             <option value="5">Heading 5</option>
-//             <option value="6">Heading 6</option> */}
-// 			<option selected value="">Normal</option>
-// 		</select>
-// 	</span>
-// );
+export const defaultFormats = [
+  "bold",
+  "italic",
+  "underline",
+  "link",
+];
 
 const Size = (
-  <select className="ql-size" defaultValue="16px">
+  <select className="ql-size" value={`${DEFAULT_FONT_SIZE}`}>
     <option value="34px">Heading 1 (34px) </option>
     <option value="24px">Heading 2 (24px) </option>
     <option value="20px">Heading 3 (20px) </option>
@@ -89,12 +93,12 @@ const Indents = (
     <button className="ql-indent" value="+1"></button>
   </span>
 );
+
 const Formatting = (
   <>
-    <button className="ql-bold"></button>
-    <button className="ql-italic"></button>
-    <button className="ql-underline"></button>
-    <button className="ql-link"></button>
+    {defaultFormats.map((format) => (
+      <button key={format} className={`ql-${format}`}></button>
+    ))}
   </>
 );
 
@@ -112,3 +116,43 @@ export const getQuillModule = (toolbarId: string) => {
     toolbar: `#${toolbarId}`,
   };
 };
+export type QuillFormat =
+  | "header"
+  | "image"
+  | "bold"
+  | "italic"
+  | "underline"
+  | "strike"
+  | "indent"
+  | "link"
+  | "image"
+  | "color"
+  | "script"
+  | "font"
+  | "align"
+  | "direction"
+  | "size"
+  | "list"
+  | "blockquote"
+  | "code-block";
+
+export const QUILL_FORMATS: QuillFormat[] = [
+  "header",
+  "image",
+  "bold",
+  "italic",
+  "underline",
+  "strike",
+  "indent",
+  "link",
+  "image",
+  "color",
+  "script",
+  "font",
+  "align",
+  "direction",
+  "size",
+  "list",
+  "blockquote",
+  "code-block",
+];
