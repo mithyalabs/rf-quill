@@ -1,9 +1,9 @@
 import React from "react";
 import { DEFAULT_FONT_SIZE } from "./Constants";
-import { QuillFontSizeOption, QUILL_MODULES } from "./RFReactQuill";
+import { QuillFontSizeOption } from "./RFReactQuill";
 
-type ToolbarOption = "size" | "color" | "image" | "align";
-interface QuillToolbarProps {
+type ToolbarOption = "size" | "color" | "image" | "align" | "indents" | "lists";
+export interface QuillToolbarProps {
   id: string;
   // variant?: 'headings' | 'size';
   toolbarOptions?: ToolbarOption[];
@@ -13,7 +13,7 @@ interface QuillToolbarProps {
 
 const QuillToolbar: React.FC<QuillToolbarProps> = (props) => {
   const {
-    toolbarOptions = ["align", "color", "image", "size"],
+    toolbarOptions = ["align", "color", "image", "size", "indents", "lists"],
     customSizes,
     formats,
   } = props;
@@ -36,7 +36,8 @@ const QuillToolbar: React.FC<QuillToolbarProps> = (props) => {
         </span>
         {toolbarOptions.includes("image") && Image}
         {toolbarOptions.includes("align") && Align}
-        {Indents}
+        {toolbarOptions.includes("indents") && Indents}
+        {toolbarOptions.includes("lists") && Lists}
       </div>
     </>
   );
@@ -52,6 +53,9 @@ const Image = <button className="ql-image"></button>;
 const Color = <input id="color" type="color" className="ql-color" />;
 
 const getCustomSizeOptions = (customSizes: QuillFontSizeOption[]) => {
+  if (!customSizes.length) {
+    return null;
+  }
   return (
     <select className="ql-size">
       {customSizes.map((size, index) => (
@@ -68,12 +72,7 @@ const getCustomSizeOptions = (customSizes: QuillFontSizeOption[]) => {
   );
 };
 
-export const defaultFormats = [
-  "bold",
-  "italic",
-  "underline",
-  "link",
-];
+export const defaultFormats = ["bold", "italic", "underline", "link"];
 
 const Size = (
   <select className="ql-size" value={`${DEFAULT_FONT_SIZE}`}>
@@ -85,10 +84,14 @@ const Size = (
     <option value="11px">Body 3 (11px) </option>
   </select>
 );
-const Indents = (
+const Lists = (
   <span className="ql-formats">
     <button className="ql-list" value="ordered"></button>
     <button className="ql-list" value="bullet"></button>
+  </span>
+);
+const Indents = (
+  <span className="ql-formats">
     <button className="ql-indent" value="-1"></button>
     <button className="ql-indent" value="+1"></button>
   </span>
@@ -110,12 +113,6 @@ const Align = (
 );
 
 export default QuillToolbar;
-export const getQuillModule = (toolbarId: string) => {
-  return {
-    ...QUILL_MODULES,
-    toolbar: `#${toolbarId}`,
-  };
-};
 export type QuillFormat =
   | "header"
   | "image"
