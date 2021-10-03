@@ -72,7 +72,7 @@ function __generator(thisArg, body) {
 var DEFAULT_FONT_SIZE = "16px";
 
 var QuillToolbar = function (props) {
-    var _a = props.toolbarOptions, toolbarOptions = _a === void 0 ? ["align", "color", "image", "size"] : _a, customSizes = props.customSizes, formats = props.formats;
+    var _a = props.toolbarOptions, toolbarOptions = _a === void 0 ? ["align", "color", "image", "size", "indents", "lists"] : _a, customSizes = props.customSizes, formats = props.formats;
     return (React.createElement(React.Fragment, null,
         React.createElement("div", { id: props.id },
             toolbarOptions.includes("size") && customSizes
@@ -87,7 +87,8 @@ var QuillToolbar = function (props) {
                 toolbarOptions.includes("color") && Color),
             toolbarOptions.includes("image") && Image,
             toolbarOptions.includes("align") && Align,
-            Indents)));
+            toolbarOptions.includes("indents") && Indents,
+            toolbarOptions.includes("lists") && Lists)));
 };
 var Image = React.createElement("button", { className: "ql-image" });
 // const Color = (
@@ -96,18 +97,16 @@ var Image = React.createElement("button", { className: "ql-image" });
 // )
 var Color = React.createElement("input", { id: "color", type: "color", className: "ql-color" });
 var getCustomSizeOptions = function (customSizes) {
+    if (!customSizes.length) {
+        return null;
+    }
     return (React.createElement("select", { className: "ql-size" }, customSizes.map(function (size, index) { return (React.createElement("option", { style: { fontSize: size.value }, key: size.value, selected: index === 0, value: size.value },
         size.label,
         " (",
         size.value,
         ")")); })));
 };
-var defaultFormats = [
-    "bold",
-    "italic",
-    "underline",
-    "link",
-];
+var defaultFormats = ["bold", "italic", "underline", "link"];
 var Size = (React.createElement("select", { className: "ql-size", value: "" + DEFAULT_FONT_SIZE },
     React.createElement("option", { value: "34px" }, "Heading 1 (34px) "),
     React.createElement("option", { value: "24px" }, "Heading 2 (24px) "),
@@ -115,22 +114,20 @@ var Size = (React.createElement("select", { className: "ql-size", value: "" + DE
     React.createElement("option", { value: "16px" }, "Body 1 (16px) "),
     React.createElement("option", { value: "14px" }, "Body 2 (14px) "),
     React.createElement("option", { value: "11px" }, "Body 3 (11px) ")));
-var Indents = (React.createElement("span", { className: "ql-formats" },
+var Lists = (React.createElement("span", { className: "ql-formats" },
     React.createElement("button", { className: "ql-list", value: "ordered" }),
-    React.createElement("button", { className: "ql-list", value: "bullet" }),
+    React.createElement("button", { className: "ql-list", value: "bullet" })));
+var Indents = (React.createElement("span", { className: "ql-formats" },
     React.createElement("button", { className: "ql-indent", value: "-1" }),
     React.createElement("button", { className: "ql-indent", value: "+1" })));
 var Formatting = (React.createElement(React.Fragment, null, defaultFormats.map(function (format) { return (React.createElement("button", { key: format, className: "ql-" + format })); })));
 var Align = (React.createElement("span", { className: "ql-formats" },
     React.createElement("button", { className: "ql-direction", value: "rtl" }),
     React.createElement("select", { className: "ql-align" })));
-var getQuillModule = function (toolbarId) {
-    return __assign(__assign({}, QUILL_MODULES), { toolbar: "#" + toolbarId });
-};
 
 var RichTextEditor = function (props) {
     var fieldConfig = props.fieldConfig, _a = props.formikProps, formikProps = _a === void 0 ? {} : _a, _b = props.fieldProps, fieldProps = _b === void 0 ? {} : _b;
-    var label = fieldProps.label, labelProps = fieldProps.labelProps, helperText = fieldProps.helperText, helperTextProps = fieldProps.helperTextProps, sizes = fieldProps.sizes, format = fieldProps.format, name = fieldProps.name;
+    var label = fieldProps.label, labelProps = fieldProps.labelProps, helperText = fieldProps.helperText, helperTextProps = fieldProps.helperTextProps, sizes = fieldProps.sizes, _c = fieldProps.toolbarProps, toolbarProps = _c === void 0 ? {} : _c, name = fieldProps.name;
     var classes = useStyles();
     useEffect(function () {
         var Size = Quill.import("attributors/style/size");
@@ -234,7 +231,7 @@ var RichTextEditor = function (props) {
     // https://stackoverflow.com/a/12502559/10032950
     return (React.createElement(React.Fragment, null,
         React.createElement(InputLabel, __assign({}, labelProps, { error: !!errorText }), label),
-        React.createElement(QuillToolbar, { formats: format, customSizes: sizes, id: toolbarId }),
+        React.createElement(QuillToolbar, __assign({}, toolbarProps, { customSizes: sizes, id: toolbarId })),
         React.createElement(ReactQuill, __assign({ ref: function (ref) {
                 quillRef.current = ref;
             }, modules: getQuillModule(toolbarId), className: classes.rte, value: value, onChange: function (data) { return formikProps === null || formikProps === void 0 ? void 0 : formikProps.setFieldValue((fieldConfig === null || fieldConfig === void 0 ? void 0 : fieldConfig.valueKey) || "", processText(data)); } }, fieldProps)),
@@ -263,65 +260,10 @@ var useStyles = makeStyles(function () {
         },
     });
 });
-var QUILL_MODULES = {
-    history: {
-        delay: 100,
-        maxStack: 200,
-        userOnly: false,
-    },
-    clipboard: {
-        matchVisual: false,
-    },
-    toolbar: [
-        [{ size: ["small", "normal", "large"] }],
-        ["bold", "italic", "underline", "strike", "link", "blockquote"],
-        [{ indent: "-1" }, { indent: "+1" }],
-        // [{ 'color': [] }],
-        [{ align: [] }],
-        ["image"],
-        [
-            {
-                color: [
-                    "#000000",
-                    "#e60000",
-                    "#ff9900",
-                    "#ffff00",
-                    "#008a00",
-                    "#0066cc",
-                    "#9933ff",
-                    "#ffffff",
-                    "#facccc",
-                    "#ffebcc",
-                    "#ffffcc",
-                    "#cce8cc",
-                    "#cce0f5",
-                    "#ebd6ff",
-                    "#bbbbbb",
-                    "#f06666",
-                    "#ffc266",
-                    "#ffff66",
-                    "#66b966",
-                    "#66a3e0",
-                    "#c285ff",
-                    "#888888",
-                    "#a10000",
-                    "#b26b00",
-                    "#b2b200",
-                    "#006100",
-                    "#0047b2",
-                    "#6b24b2",
-                    "#444444",
-                    "#5c0000",
-                    "#663d00",
-                    "#666600",
-                    "#003700",
-                    "#002966",
-                    "#3d1466",
-                    "color-picker",
-                ],
-            },
-        ],
-    ],
+var getQuillModule = function (toolbarId) {
+    return {
+        toolbar: "#" + toolbarId,
+    };
 };
 var processText = function (text) {
     // quill simply keeps adding <br> for no reason at all. Workaround for it.
@@ -330,5 +272,5 @@ var processText = function (text) {
 
 attachField('rte-quill', React.createElement(RichTextEditor, null));
 
-export { QUILL_MODULES };
+export { getQuillModule };
 //# sourceMappingURL=index.es.js.map
