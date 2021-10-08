@@ -32,6 +32,18 @@ var __assign = function() {
     return __assign.apply(this, arguments);
 };
 
+function __rest(s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+}
+
 function __awaiter(thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -127,7 +139,7 @@ var Align = (React.createElement("span", { className: "ql-formats" },
 
 var RichTextEditor = function (props) {
     var fieldConfig = props.fieldConfig, _a = props.formikProps, formikProps = _a === void 0 ? {} : _a, _b = props.fieldProps, fieldProps = _b === void 0 ? {} : _b;
-    var label = fieldProps.label, labelProps = fieldProps.labelProps, helperText = fieldProps.helperText, helperTextProps = fieldProps.helperTextProps, sizes = fieldProps.sizes, _c = fieldProps.toolbarProps, toolbarProps = _c === void 0 ? {} : _c, name = fieldProps.name;
+    var label = fieldProps.label, labelProps = fieldProps.labelProps, helperText = fieldProps.helperText, helperTextProps = fieldProps.helperTextProps, sizes = fieldProps.sizes, _c = fieldProps.toolbarProps, toolbarProps = _c === void 0 ? {} : _c, name = fieldProps.name, restFieldProps = __rest(fieldProps, ["label", "labelProps", "helperText", "helperTextProps", "sizes", "toolbarProps", "name"]);
     var classes = useStyles();
     useEffect(function () {
         var Size = Quill.import("attributors/style/size");
@@ -234,7 +246,7 @@ var RichTextEditor = function (props) {
         React.createElement(QuillToolbar, __assign({}, toolbarProps, { customSizes: sizes, id: toolbarId })),
         React.createElement(ReactQuill, __assign({ ref: function (ref) {
                 quillRef.current = ref;
-            }, modules: getQuillModule(toolbarId), className: classes.rte, value: value, onChange: function (data) { return formikProps === null || formikProps === void 0 ? void 0 : formikProps.setFieldValue((fieldConfig === null || fieldConfig === void 0 ? void 0 : fieldConfig.valueKey) || "", processText(data)); } }, fieldProps)),
+            }, modules: getQuillModule(toolbarId), className: classes.rte, value: value, onChange: function (data) { return formikProps === null || formikProps === void 0 ? void 0 : formikProps.setFieldValue((fieldConfig === null || fieldConfig === void 0 ? void 0 : fieldConfig.valueKey) || "", processText(data)); } }, restFieldProps)),
         React.createElement(FormHelperText, __assign({}, helperTextProps, { error: !!errorText }),
             errorText || helperText,
             " ")));
@@ -267,7 +279,7 @@ var getQuillModule = function (toolbarId) {
 };
 var processText = function (text) {
     // quill simply keeps adding <br> for no reason at all. Workaround for it.
-    return text.replaceAll(/<p><br><\/p>/g, "<p>&nbsp;</p>");
+    return text.replaceAll(/<p><br><\/p>/g, "&nbsp;");
 };
 
 attachField('rte-quill', React.createElement(RichTextEditor, null));

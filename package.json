@@ -1,6 +1,6 @@
 {
     "name": "rf-quill",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "description": "React forms plugin for rich text editor input on react-quill",
     "main": "dist/index.js",
     "jsnext:main": "dist/index.es.js",
