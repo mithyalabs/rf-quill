@@ -45,11 +45,6 @@ const QuillToolbar: React.FC<QuillToolbarProps> = (props) => {
 
 const Image = <button className="ql-image"></button>;
 
-// const Color = (
-//     <select className="ql-color">
-//     </select>
-// )
-
 const Color = <input id="color" type="color" className="ql-color" />;
 
 const getCustomSizeOptions = (customSizes: QuillFontSizeOption[]) => {
@@ -75,7 +70,7 @@ const getCustomSizeOptions = (customSizes: QuillFontSizeOption[]) => {
 export const defaultFormats = ["bold", "italic", "underline", "link"];
 
 const Size = (
-  <select className="ql-size" value={`${DEFAULT_FONT_SIZE}`}>
+  <select className="ql-size" defaultValue={`${DEFAULT_FONT_SIZE}`}>
     <option value="34px">Heading 1 (34px) </option>
     <option value="24px">Heading 2 (24px) </option>
     <option value="20px">Heading 3 (20px) </option>

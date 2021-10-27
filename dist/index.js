@@ -111,10 +111,6 @@ var QuillToolbar = function (props) {
             toolbarOptions.includes("lists") && Lists)));
 };
 var Image = React__default.createElement("button", { className: "ql-image" });
-// const Color = (
-//     <select className="ql-color">
-//     </select>
-// )
 var Color = React__default.createElement("input", { id: "color", type: "color", className: "ql-color" });
 var getCustomSizeOptions = function (customSizes) {
     if (!customSizes.length) {
@@ -127,7 +123,7 @@ var getCustomSizeOptions = function (customSizes) {
         ")")); })));
 };
 var defaultFormats = ["bold", "italic", "underline", "link"];
-var Size = (React__default.createElement("select", { className: "ql-size", value: "" + DEFAULT_FONT_SIZE },
+var Size = (React__default.createElement("select", { className: "ql-size", defaultValue: "" + DEFAULT_FONT_SIZE },
     React__default.createElement("option", { value: "34px" }, "Heading 1 (34px) "),
     React__default.createElement("option", { value: "24px" }, "Heading 2 (24px) "),
     React__default.createElement("option", { value: "20px" }, "Heading 3 (20px) "),
