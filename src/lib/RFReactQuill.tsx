@@ -48,6 +48,7 @@ const RichTextEditor: FC<RichTextEditorProps> = (props) => {
     sizes,
     toolbarProps = {},
     name,
+    ...restFieldProps
   } = fieldProps;
 
   const classes = useStyles();
@@ -173,7 +174,7 @@ const RichTextEditor: FC<RichTextEditorProps> = (props) => {
             processText(data)
           )
         }
-        {...fieldProps}
+        {...restFieldProps}
       />
       <FormHelperText {...helperTextProps} error={!!errorText}>
         {errorText || helperText}{" "}
@@ -214,5 +215,5 @@ export const getQuillModule = (toolbarId: string) => {
 
 const processText = (text: string): string => {
   // quill simply keeps adding <br> for no reason at all. Workaround for it.
-  return text.replaceAll(/<p><br><\/p>/g, "<p>&nbsp;</p>");
+  return text.replaceAll(/<p><br><\/p>/g, "&nbsp;");
 };
