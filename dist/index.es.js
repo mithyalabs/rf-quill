@@ -242,7 +242,11 @@ var RichTextEditor = function (props) {
         React.createElement(QuillToolbar, __assign({}, toolbarProps, { customSizes: sizes, id: toolbarId })),
         React.createElement(ReactQuill, __assign({ ref: function (ref) {
                 quillRef.current = ref;
-            }, modules: getQuillModule(toolbarId), className: classes.rte, value: value, onChange: function (data) { return formikProps === null || formikProps === void 0 ? void 0 : formikProps.setFieldValue((fieldConfig === null || fieldConfig === void 0 ? void 0 : fieldConfig.valueKey) || "", processText(data)); } }, restFieldProps)),
+            }, modules: getQuillModule(toolbarId), className: classes.rte, value: value, onChange: function (data) {
+                console.log({ data: data });
+                console.count('onChange');
+                formikProps === null || formikProps === void 0 ? void 0 : formikProps.setFieldValue((fieldConfig === null || fieldConfig === void 0 ? void 0 : fieldConfig.valueKey) || "", data);
+            } }, restFieldProps)),
         React.createElement(FormHelperText, __assign({}, helperTextProps, { error: !!errorText }),
             errorText || helperText,
             " ")));
@@ -272,10 +276,6 @@ var getQuillModule = function (toolbarId) {
     return {
         toolbar: "#" + toolbarId,
     };
-};
-var processText = function (text) {
-    // quill simply keeps adding <br> for no reason at all. Workaround for it.
-    return text.replaceAll(/<p><br><\/p>/g, "&nbsp;");
 };
 
 attachField('rte-quill', React.createElement(RichTextEditor, null));
