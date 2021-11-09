@@ -168,12 +168,14 @@ const RichTextEditor: FC<RichTextEditorProps> = (props) => {
         modules={getQuillModule(toolbarId)}
         className={classes.rte}
         value={value}
-        onChange={(data) =>
+        onChange={(data) => {
+          console.log({ data });
+          console.count('onChange')
           formikProps?.setFieldValue(
             fieldConfig?.valueKey || "",
-            processText(data)
-          )
-        }
+data
+          );
+        }}
         {...restFieldProps}
       />
       <FormHelperText {...helperTextProps} error={!!errorText}>
@@ -211,9 +213,4 @@ export const getQuillModule = (toolbarId: string) => {
   return {
     toolbar: `#${toolbarId}`,
   };
-};
-
-const processText = (text: string): string => {
-  // quill simply keeps adding <br> for no reason at all. Workaround for it.
-  return text.replaceAll(/<p><br><\/p>/g, "&nbsp;");
 };
