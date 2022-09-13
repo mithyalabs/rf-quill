@@ -22,9 +22,9 @@ export interface QuillFontSizeOption {
 export interface ReactQuillFieldProps {
   name: string;
   label: string;
-  labelProps?: InputLabelProps;
-  helperText?: string;
-  helperTextProps?: FormHelperTextProps;
+  labelProps: InputLabelProps;
+  helperText: string;
+  helperTextProps: FormHelperTextProps;
   sizes?: QuillFontSizeOption[];
   customImageUploadAdapter?: (file: any) => Promise<string>;
   toolbarProps?: Omit<QuillToolbarProps, "customSizes" | "id">;
@@ -169,12 +169,12 @@ const RichTextEditor: FC<RichTextEditorProps> = (props) => {
         className={classes.rte}
         value={value}
         onChange={(data) => {
-          // console.log({ data });
-          // console.count("onChange");
-          formikProps?.setFieldValue(fieldConfig?.valueKey ?? "", data);
-        }}
-        onFocus={() => {
-          formikProps.setFieldTouched(fieldConfig?.valueKey ?? "");
+          console.log({ data });
+          console.count('onChange')
+          formikProps?.setFieldValue(
+            fieldConfig?.valueKey || "",
+data
+          );
         }}
         {...restFieldProps}
       />
