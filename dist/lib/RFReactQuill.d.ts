@@ -10,9 +10,9 @@ export interface QuillFontSizeOption {
 export interface ReactQuillFieldProps {
     name: string;
     label: string;
-    labelProps: InputLabelProps;
-    helperText: string;
-    helperTextProps: FormHelperTextProps;
+    labelProps?: InputLabelProps;
+    helperText?: string;
+    helperTextProps?: FormHelperTextProps;
     sizes?: QuillFontSizeOption[];
     customImageUploadAdapter?: (file: any) => Promise<string>;
     toolbarProps?: Omit<QuillToolbarProps, "customSizes" | "id">;

@@ -251,9 +251,13 @@ var RichTextEditor = function (props) {
         React__default.createElement(ReactQuill__default, __assign({ ref: function (ref) {
                 quillRef.current = ref;
             }, modules: getQuillModule(toolbarId), className: classes.rte, value: value, onChange: function (data) {
-                console.log({ data: data });
-                console.count('onChange');
-                formikProps === null || formikProps === void 0 ? void 0 : formikProps.setFieldValue((fieldConfig === null || fieldConfig === void 0 ? void 0 : fieldConfig.valueKey) || "", data);
+                var _a;
+                // console.log({ data });
+                // console.count("onChange");
+                formikProps === null || formikProps === void 0 ? void 0 : formikProps.setFieldValue((_a = fieldConfig === null || fieldConfig === void 0 ? void 0 : fieldConfig.valueKey) !== null && _a !== void 0 ? _a : "", data);
+            }, onFocus: function () {
+                var _a;
+                formikProps.setFieldTouched((_a = fieldConfig === null || fieldConfig === void 0 ? void 0 : fieldConfig.valueKey) !== null && _a !== void 0 ? _a : "");
             } }, restFieldProps)),
         React__default.createElement(core.FormHelperText, __assign({}, helperTextProps, { error: !!errorText }),
             errorText || helperText,
